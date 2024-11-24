@@ -2,10 +2,21 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 )
 
 func SaveData(db *sql.DB, title string, date time.Time) error {
+	var existingCount int
+	err := db.QueryRow("SELECT COUNT(*) FROM ARTICLE WHERE TITLE = ? AND DATE = ?", title, date).Scan(&existingCount)
+	if err != nil {
+		return fmt.Errorf("error checking duplicates: %w", err)
+	}
+
+	if existingCount > 0 {
+		return nil
+	}
+
 	tx, err := db.Begin()
 	if err != nil {
 		return err
