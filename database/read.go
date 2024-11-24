@@ -3,36 +3,36 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"time"
 )
 
-type Article struct {
-	ID    int
-	Title string
-	Date  time.Time
+type Notice struct {
+	ID    int    `json:"id"`
+	Title string `json:"title"`
+	Link  string `json:"link"`
+	Date  string `json:"date"`
 }
 
-func ReadData(db *sql.DB) ([]Article, error) {
-	query := `SELECT ID, TITLE, "DATE" FROM ARTICLE`
+func ReadData(db *sql.DB) ([]Notice, error) {
+	query := `SELECT ID, TITLE, LINK, strftime('%Y-%m-%d', "DATE") AS "DATE" FROM NOTICE`
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var articles []Article
+	var notices []Notice
 	for rows.Next() {
-		var article Article
-		err := rows.Scan(&article.ID, &article.Title, &article.Date)
+		var notice Notice
+		err := rows.Scan(&notice.ID, &notice.Title, &notice.Link, &notice.Date)
 		if err != nil {
-			return nil, fmt.Errorf("error scanning article row: %w", err)
+			return nil, fmt.Errorf("error scanning notice row: %w", err)
 		}
-		articles = append(articles, article)
+		notices = append(notices, notice)
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, fmt.Errorf("row iteration error: %w", err)
 	}
 
-	return articles, nil
+	return notices, nil
 }

@@ -1,5 +1,11 @@
 # Huffy
 
+### 사용 라이브러리
+
+- fiber
+- sqlite3
+- colly
+
 ### API 설계
 
 - 학식 정보 받아오기

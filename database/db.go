@@ -11,14 +11,28 @@ func InitDB(file string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	query := `
-	CREATE TABLE IF NOT EXISTS ARTICLE (
+	query1 := `
+	CREATE TABLE IF NOT EXISTS NOTICE (
 		ID INTEGER PRIMARY KEY AUTOINCREMENT,
 		TITLE TEXT NOT NULL,
-		"DATE" TIMESTAMP NOT NULL
-	);`
+		LINK TEXT NOT NULL,
+		"DATE" DATETIME NOT NULL
+		);
+	`
 
-	_, err = db.Exec(query)
+	query2 := `
+	CREATE TABLE IF NOT EXISTS MENU (
+		ID INTEGER PRIMARY KEY AUTOINCREMENT,
+		CONTENT TEXT NOT NULL
+	);
+	`
+
+	_, err = db.Exec(query1)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.Exec(query2)
 	if err != nil {
 		return nil, err
 	}

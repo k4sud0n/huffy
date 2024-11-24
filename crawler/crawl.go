@@ -28,7 +28,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					_ = database.SaveData(db, articleTitle, articleDate)
+					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -41,7 +42,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					_ = database.SaveData(db, articleTitle, articleDate)
+					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -54,7 +56,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					_ = database.SaveData(db, articleTitle, articleDate)
+					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -67,7 +70,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					_ = database.SaveData(db, articleTitle, articleDate)
+					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -80,7 +84,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006-01-02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(1) a"))
-					_ = database.SaveData(db, articleTitle, articleDate)
+					articleLink := "http://builder.hufs.ac.kr/user/" + e.ChildAttr("td:nth-child(1) a", "href")
+					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -93,7 +98,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					_ = database.SaveData(db, articleTitle, articleDate)
+					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
