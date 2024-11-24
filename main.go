@@ -17,8 +17,9 @@ type Output struct {
 }
 
 type ListCard struct {
-	Header Header `json:"header"`
-	Items  []Item `json:"items"`
+	Header  Header   `json:"header"`
+	Items   []Item   `json:"items"`
+	Buttons []Button `json:"buttons"`
 }
 
 type Header struct {
@@ -34,6 +35,12 @@ type Item struct {
 
 type Link struct {
 	Web string `json:"web"`
+}
+
+type Button struct {
+	Action     string `json:"action"`
+	Label      string `json:"label"`
+	WebLinkUrl string `json:"webLinkUrl"`
 }
 
 func main() {
@@ -92,6 +99,13 @@ func main() {
 								Title: "챗봇 관리자센터를 소개합니다.",
 							},
 							Items: items,
+							Buttons: []Button{
+								{
+									Action:     "webLink",
+									Label:      "버튼",
+									WebLinkUrl: "https://e.kakao.com/t/hello-ryan",
+								},
+							},
 						},
 					},
 				},
