@@ -48,7 +48,7 @@ func main() {
 	//dbExist("data.db", db)
 	crawler.CrawlData(db)
 
-	api.Get("/menu/today", func(c *fiber.Ctx) error {
+	api.Post("/notice", func(c *fiber.Ctx) error {
 		articles, err := database.ReadData(db)
 		if err != nil {
 			log.Error(err)
