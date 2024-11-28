@@ -9,16 +9,10 @@ import (
 	"time"
 )
 
-type SiteCralwer struct {
-	URL      string
-	Selector string
-	Handler  func(e *colly.HTMLElement)
-}
-
-func CrawlData(db *sql.DB) error {
+func GetNotice(db *sql.DB) error {
 	weekAgo := time.Now().AddDate(0, 0, -7)
 
-	sites := []SiteCralwer{
+	sites := []SiteCrawler{
 		// 한국외대 공지
 		{
 			URL:      "https://www.hufs.ac.kr/hufs/11281/subview.do",
@@ -28,8 +22,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
-					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
+					articleLink := "https://hufs.ac.kr" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveNotice(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -42,8 +36,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
-					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
+					articleLink := "https://hufs.ac.kr" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveNotice(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -56,8 +50,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
-					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
+					articleLink := "https://hufs.ac.kr" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveNotice(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -70,8 +64,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
-					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
+					articleLink := "https://hufs.ac.kr" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveNotice(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -84,8 +78,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006-01-02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(1) a"))
-					articleLink := "http://builder.hufs.ac.kr/user/" + e.ChildAttr("td:nth-child(1) a", "href")
-					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
+					articleLink := "http://builder.hufs.ac.kr/user" + e.ChildAttr("td:nth-child(1) a", "href")
+					_ = database.SaveNotice(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -98,8 +92,8 @@ func CrawlData(db *sql.DB) error {
 				articleDate, _ := time.Parse("2006.01.02", articleDateStr)
 				if articleDate.After(weekAgo) {
 					articleTitle := strings.TrimSpace(e.ChildText("td:nth-child(2) strong"))
-					articleLink := "https://hufs.ac.kr/" + e.ChildAttr("td:nth-child(2) a", "href")
-					_ = database.SaveData(db, articleTitle, articleLink, articleDate)
+					articleLink := "https://hufs.ac.kr" + e.ChildAttr("td:nth-child(2) a", "href")
+					_ = database.SaveNotice(db, articleTitle, articleLink, articleDate)
 				}
 			},
 		},
@@ -109,7 +103,7 @@ func CrawlData(db *sql.DB) error {
 	for _, site := range sites {
 		wg.Add(1)
 
-		go func(site SiteCralwer) {
+		go func(site SiteCrawler) {
 			defer wg.Done()
 
 			siteCollector := colly.NewCollector()

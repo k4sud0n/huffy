@@ -14,8 +14,11 @@ import (
 func dbExist(fileName string, db *sql.DB) {
 	_, error := os.Stat(fileName)
 	if os.IsNotExist(error) {
-		crawler.CrawlData(db)
+		crawler.GetMenu(db)
+		crawler.GetNotice(db)
 	} else {
+		crawler.GetMenu(db)
+		crawler.GetNotice(db)
 		go func() {
 			ticker := time.NewTicker(24 * time.Hour)
 			defer ticker.Stop()
@@ -23,7 +26,7 @@ func dbExist(fileName string, db *sql.DB) {
 			for {
 				select {
 				case <-ticker.C:
-					err := crawler.CrawlData(db)
+					err := crawler.GetNotice(db)
 					if err != nil {
 						log.Error("Crawling Failed: ", err)
 					} else {
@@ -42,23 +45,37 @@ func main() {
 	}
 	defer db.Close()
 
+	dbExist("data.db", db)
+
 	app := fiber.New()
 	api := app.Group("/api")
 
-	//dbExist("data.db", db)
-	crawler.CrawlData(db)
-
-	api.Post("/notice", func(c *fiber.Ctx) error {
-		articles, err := database.ReadData(db)
+	api.Get("/notice", func(c *fiber.Ctx) error {
+		notices, err := database.ReadNotice(db)
 		if err != nil {
 			log.Error(err)
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to fetch articles",
+				"error": "Failed to fetch notices",
 			})
 		}
 
-		items := template.CreateItems(articles)
-		response := template.CreateResponse(items)
+		items := template.CreateNoticeItems(notices)
+		response := template.CreateNoticeResponse(items)
+
+		return c.JSON(response)
+	})
+
+	api.Get("/menu/today", func(c *fiber.Ctx) error {
+		menus, err := database.ReadMenu(db)
+		if err != nil {
+			log.Error(err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Failed to fetch menus",
+			})
+		}
+
+		responseText := template.CreateMenuItem(menus)
+		response := template.CreateMenuResponse(responseText)
 
 		return c.JSON(response)
 	})
