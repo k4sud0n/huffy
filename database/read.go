@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-func ReadMenu(db *sql.DB) ([]Menu, error) {
-	query := `SELECT ID, "DATE", LOCATION, CONTENT FROM MENU WHERE "DATE" LIKE strftime('%Y/%m/%d', 'now') || '%';`
-	rows, err := db.Query(query)
+func ReadMenu(db *sql.DB, parameter string) ([]Menu, error) {
+	query := `SELECT ID, "DATE", CONTENT FROM MENU WHERE "DATE" LIKE strftime('%Y/%m/%d', 'now') || '%' AND LOCATION = ?;`
+	rows, err := db.Query(query, parameter)
 	if err != nil {
 		return nil, err
 	}
@@ -16,7 +16,7 @@ func ReadMenu(db *sql.DB) ([]Menu, error) {
 	var menus []Menu
 	for rows.Next() {
 		var menu Menu
-		err := rows.Scan(&menu.ID, &menu.Location, &menu.Date, &menu.Content)
+		err := rows.Scan(&menu.ID, &menu.Date, &menu.Content)
 		if err != nil {
 			return nil, fmt.Errorf("error scanning notice row: %w", err)
 		}

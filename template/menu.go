@@ -1,24 +1,18 @@
 package template
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"huffy/database"
 )
 
 func CreateMenuItem(menus []database.Menu) string {
-	var menuDate string
-	var menuContent string
-	var responseText string
+	var content string
 
 	for _, menu := range menus {
-		menuDate = menu.Date
-		menuContent = menu.Content
-
-		responseText += fmt.Sprintf("%s\n%s", menuDate, menuContent)
+		content = menu.Content
 	}
 
-	return responseText
+	return content
 }
 
 func CreateMenuResponse(responseText string) fiber.Map {

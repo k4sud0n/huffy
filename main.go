@@ -66,7 +66,14 @@ func main() {
 	})
 
 	api.Get("/menu/today", func(c *fiber.Ctx) error {
-		menus, err := database.ReadMenu(db)
+		parameter := c.Query("name")
+		if parameter == "" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Name parameter is required",
+			})
+		}
+
+		menus, err := database.ReadMenu(db, parameter)
 		if err != nil {
 			log.Error(err)
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

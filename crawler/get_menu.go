@@ -42,6 +42,30 @@ func GetMenu(db *sql.DB) error {
 				database.SaveMenu(db, currentTime.Format("2006/01/02"), "husaeng_student", content)
 			},
 		},
+		// 후생관 교직원식당
+		{
+			URL:      fmt.Sprintf("https://wis.hufs.ac.kr/jsp/HUFS/cafeteria/viewWeek.jsp?startDt=%s&endDt=%s&caf_id=h202", currentTime.Format("20060102"), currentTime.Format("20060102")),
+			Selector: "table",
+			Handler: func(e *colly.HTMLElement) {
+				var content string
+
+				e.ForEach("tr[height='35']", func(rowIndex int, row *colly.HTMLElement) {
+					text := strings.TrimSpace(row.Text)
+
+					switch rowIndex {
+					case 1:
+						content += text
+					}
+				})
+
+				if strings.TrimSpace(content) == "" {
+					fmt.Println("Skipping empty menu entry")
+					return
+				}
+
+				database.SaveMenu(db, currentTime.Format("2006/01/02"), "husaeng_professor", content)
+			},
+		},
 	}
 
 	var wg sync.WaitGroup
