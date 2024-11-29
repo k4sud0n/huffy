@@ -73,6 +73,18 @@ func main() {
 			})
 		}
 
+		// 어문관
+		if parameter == "eomungwan" {
+			response := template.CreateEomungwanResponse()
+			return c.JSON(response)
+		}
+
+		// 바비든든
+		if parameter == "babidundun" {
+			response := template.CreateBabidundunResponse()
+			return c.JSON(response)
+		}
+
 		menus, err := database.ReadMenu(db, parameter)
 		if err != nil {
 			log.Error(err)
