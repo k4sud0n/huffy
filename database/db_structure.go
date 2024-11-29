@@ -1,9 +1,10 @@
 package database
 
 type Menu struct {
-	ID      int    `json:"id"`
-	Date    string `json:"title"`
-	Content string `json:"content"`
+	ID       int    `json:"id"`
+	Date     string `json:"title"`
+	Location string `json:"location"`
+	Content  string `json:"content"`
 }
 
 type Notice struct {

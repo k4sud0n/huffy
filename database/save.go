@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-func SaveMenu(db *sql.DB, menuDate string, content string) error {
+func SaveMenu(db *sql.DB, date string, location string, content string) error {
 	var existingCount int
-	err := db.QueryRow("SELECT COUNT(*) FROM MENU WHERE \"DATE\" = ? AND CONTENT = ?", menuDate, content).Scan(&existingCount)
+	err := db.QueryRow("SELECT COUNT(*) FROM MENU WHERE \"DATE\" = ? AND LOCATION = ?", date, location).Scan(&existingCount)
 	if err != nil {
 		return fmt.Errorf("error checking for duplicates: %w", err)
 	}
@@ -23,13 +23,13 @@ func SaveMenu(db *sql.DB, menuDate string, content string) error {
 	}
 	defer tx.Rollback()
 
-	stmt, err := tx.Prepare(`INSERT INTO MENU ("DATE", CONTENT) VALUES (?, ?)`)
+	stmt, err := tx.Prepare(`INSERT INTO MENU ("DATE", LOCATION, CONTENT) VALUES (?, ?, ?)`)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(menuDate, content)
+	_, err = stmt.Exec(date, location, content)
 	if err != nil {
 		return err
 	}
