@@ -15,14 +15,14 @@ func CreateMenuItem(menus []database.Menu) string {
 	return content
 }
 
-func CreateMenuResponse(responseText string) fiber.Map {
+func CreateMenuResponse(content string) fiber.Map {
 	response := fiber.Map{
 		"version": "2.0",
 		"template": TemplateData{
 			Outputs: []Output{
 				{
 					SimpleText: &SimpleText{
-						Text: responseText,
+						Text: content,
 					},
 				},
 			},
