@@ -49,7 +49,7 @@ func main() {
 	app := fiber.New()
 	api := app.Group("/api")
 
-	api.Get("/notice", func(c *fiber.Ctx) error {
+	api.Post("/notice", func(c *fiber.Ctx) error {
 		notices, err := database.ReadNotice(db)
 		if err != nil {
 			log.Error(err)
@@ -64,7 +64,7 @@ func main() {
 		return c.JSON(response)
 	})
 
-	api.Get("/menu/today", func(c *fiber.Ctx) error {
+	api.Post("/menu/today", func(c *fiber.Ctx) error {
 		parameter := c.Query("name")
 		if parameter == "" {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

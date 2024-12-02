@@ -31,7 +31,10 @@ func ReadMenu(db *sql.DB, parameter string) ([]Menu, error) {
 }
 
 func ReadNotice(db *sql.DB) ([]Notice, error) {
-	query := `SELECT ID, TITLE, LINK, strftime('%Y-%m-%d', "DATE") AS "DATE" FROM NOTICE`
+	query := `SELECT ID, TITLE, LINK, strftime('%Y-%m-%d', "DATE") AS "DATE" 
+				FROM NOTICE
+				ORDER BY "DATE" DESC
+				LIMIT 5;`
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
