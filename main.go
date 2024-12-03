@@ -64,7 +64,7 @@ func main() {
 		return c.JSON(response)
 	})
 
-	api.Post("/menu/today", func(c *fiber.Ctx) error {
+	api.Get("/menu/today", func(c *fiber.Ctx) error {
 		parameter := c.Query("name")
 		if parameter == "" {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -91,30 +91,39 @@ func main() {
 
 func scheduleCrawlingTask(db *sql.DB) {
 	go func() {
-		// 현재 시간과 다음 실행 시간(매일 00:01) 계산
-		now := time.Now()
-		nextRun := time.Date(
-			now.Year(), now.Month(), now.Day(),
-			0, 1, 0, 0, now.Location(), // 매일 00:01
-		)
-
-		if now.After(nextRun) { // 이미 00:01을 지나쳤다면 다음 날로 설정
-			nextRun = nextRun.Add(24 * time.Hour)
-		}
-
-		timeUntilNextRun := time.Until(nextRun)
-
-		// 첫 번째 대기 후 작업 실행
-		time.Sleep(timeUntilNextRun)
-		runCrawlingTask(db)
-
-		// 이후 매일 24시간 간격으로 실행
-		ticker := time.NewTicker(24 * time.Hour)
-		defer ticker.Stop()
-
 		for {
-			<-ticker.C
+			now := time.Now()
+
+			// 다음 실행 시간을 00:00로 설정
+			nextRun := time.Date(
+				now.Year(), now.Month(), now.Day(),
+				0, 0, 0, 0, now.Location(), // 매일 00:00
+			)
+
+			// 이미 00:00을 지나쳤으면 내일 00:00로 설정
+			if now.After(nextRun) {
+				nextRun = nextRun.Add(24 * time.Hour)
+			}
+
+			// 대기 시간 계산
+			timeUntilNextRun := time.Until(nextRun)
+			fmt.Println("Time until next run:", timeUntilNextRun) // 대기 시간 출력
+
+			// 첫 번째 대기 후 작업 실행
+			time.Sleep(timeUntilNextRun)
+
+			// 크롤링 작업 실행
 			runCrawlingTask(db)
+
+			// 이후 매일 24시간 간격으로 실행
+			ticker := time.NewTicker(24 * time.Hour)
+			defer ticker.Stop()
+
+			// 하루가 지날 때마다 실행
+			for {
+				<-ticker.C
+				runCrawlingTask(db)
+			}
 		}
 	}()
 }
