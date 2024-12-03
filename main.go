@@ -49,6 +49,21 @@ func main() {
 	app := fiber.New()
 	api := app.Group("/api")
 
+	api.Get("/notice", func(c *fiber.Ctx) error {
+		notices, err := database.ReadNotice(db)
+		if err != nil {
+			log.Error(err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Failed to fetch notices",
+			})
+		}
+
+		items := template.CreateNoticeItems(notices)
+		response := template.CreateNoticeResponse(items)
+
+		return c.JSON(response)
+	})
+
 	api.Post("/notice", func(c *fiber.Ctx) error {
 		notices, err := database.ReadNotice(db)
 		if err != nil {
@@ -65,6 +80,28 @@ func main() {
 	})
 
 	api.Get("/menu/today", func(c *fiber.Ctx) error {
+		parameter := c.Query("name")
+		if parameter == "" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Name parameter is required",
+			})
+		}
+
+		menus, err := database.ReadMenu(db, parameter)
+		if err != nil {
+			log.Error(err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Failed to fetch menus",
+			})
+		}
+
+		item := template.CreateMenuItem(menus)
+		response := template.CreateMenuResponse(item)
+
+		return c.JSON(response)
+	})
+
+	api.Post("/menu/today", func(c *fiber.Ctx) error {
 		parameter := c.Query("name")
 		if parameter == "" {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
