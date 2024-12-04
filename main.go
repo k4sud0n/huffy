@@ -21,10 +21,9 @@ func main() {
 	var db *sql.DB
 	var err error
 
-	// 데이터베이스 파일 확인
 	if checkDBExist("data.db") {
 		fmt.Println("Database file found. Initializing DB connection...")
-		db, err = database.InitDB("data.db") // 파일이 존재하면 DB 초기화
+		db, err = database.InitDB("data.db")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -34,7 +33,6 @@ func main() {
 		scheduleCrawlingTask(db)
 	} else {
 		fmt.Println("Database file not found. Running initial crawling tasks...")
-		// 임시 DB 생성 후 초기 크롤링 실행
 		db, err = database.InitDB("data.db")
 		if err != nil {
 			log.Fatal(err)
@@ -43,6 +41,9 @@ func main() {
 
 		// 초기 크롤링 실행
 		runCrawlingTask(db)
+
+		// 초기 크롤링 후 예약된 크롤링 작업 실행
+		scheduleCrawlingTask(db)
 	}
 
 	// Fiber 서버 설정
