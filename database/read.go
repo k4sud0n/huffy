@@ -6,7 +6,11 @@ import (
 )
 
 func ReadMenu(db *sql.DB, parameter string) ([]Menu, error) {
-	query := `SELECT ID, "DATE", CONTENT FROM MENU WHERE "DATE" LIKE strftime('%Y/%m/%d', 'now') || '%' AND LOCATION = ?;`
+	query := `SELECT ID, "DATE", CONTENT
+			FROM MENU
+			WHERE "DATE" = strftime('%Y/%m/%d', datetime('now', '+09:00'))
+  			AND LOCATION = ?;`
+
 	rows, err := db.Query(query, parameter)
 	if err != nil {
 		return nil, err
@@ -31,10 +35,11 @@ func ReadMenu(db *sql.DB, parameter string) ([]Menu, error) {
 }
 
 func ReadNotice(db *sql.DB) ([]Notice, error) {
-	query := `SELECT ID, TITLE, LINK, strftime('%Y-%m-%d', "DATE") AS "DATE" 
-				FROM NOTICE
-				ORDER BY "DATE" DESC
-				LIMIT 5;`
+	query := `SELECT ID, TITLE, LINK, strftime('%Y-%m-%d', datetime("DATE", '+09:00')) AS "DATE" 
+          FROM NOTICE
+          ORDER BY "DATE" DESC
+          LIMIT 5;`
+
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
