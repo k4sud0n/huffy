@@ -4,6 +4,9 @@ FROM golang:1.23-alpine AS builder
 # SQLite를 위한 C 라이브러리 설치
 RUN apk add --no-cache gcc libc-dev sqlite-dev
 
+# TimeZone 서울로 설정
+ENV TZ=Asia/Seoul
+
 # 작업 디렉토리 설정
 WORKDIR /app
 
