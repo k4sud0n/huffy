@@ -26,15 +26,11 @@ func GetMenu(db *sql.DB) error {
 					text := strings.TrimSpace(row.Text)
 
 					switch rowIndex {
-					case 1:
-						content += text + "\n\n==========\n\n"
-					case 2:
-						content += text + "\n\n==========\n\n"
-					case 3:
-						content += text + "\n\n==========\n\n"
-					case 4:
+					case 1, 2, 3, 4:
 						content += text + "\n\n==========\n\n"
 					case 5:
+						content += text
+					default:
 						content += text
 					}
 				})
@@ -62,6 +58,8 @@ func GetMenu(db *sql.DB) error {
 						content += text + "\n\n==========\n\n"
 					case 2:
 						content += text
+					default:
+						content += text
 					}
 				})
 
@@ -84,11 +82,11 @@ func GetMenu(db *sql.DB) error {
 					text := strings.TrimSpace(row.Text)
 
 					switch rowIndex {
-					case 1:
-						content += text + "\n\n==========\n\n"
-					case 2:
+					case 1, 2:
 						content += text + "\n\n==========\n\n"
 					case 3:
+						content += text
+					default:
 						content += text
 					}
 				})
@@ -114,6 +112,8 @@ func GetMenu(db *sql.DB) error {
 					switch rowIndex {
 					case 1:
 						content += text
+					default:
+						content += text
 					}
 				})
 
@@ -136,11 +136,7 @@ func GetMenu(db *sql.DB) error {
 					text := strings.TrimSpace(row.Text)
 
 					switch rowIndex {
-					case 1:
-						content += text + "\n\n==========\n\n"
-					case 2:
-						content += text + "\n\n==========\n\n"
-					case 3:
+					case 1, 2, 3:
 						content += text + "\n\n==========\n\n"
 					case 4:
 						content += text
